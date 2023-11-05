@@ -11,6 +11,9 @@ __pycache__
 .pytest_cache/
 venv
 
+ds_problem.pdf
+
+*.csv
 *.aux
 *.bbl
 *.bcf
