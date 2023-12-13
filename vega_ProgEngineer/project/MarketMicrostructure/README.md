@@ -1,10 +1,5 @@
 # Market Microstructure
 
-## Current research: 
-**Supervisors**: 
-
-**Objectives**:
-1.
 
 ## Get started
 Open virtual environment 
