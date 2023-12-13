@@ -232,7 +232,7 @@ impl OrderBook
     /// 
     /// # Panics
     /// This function will panic if given string is malformed, e.g. does not contain necessary data about quote or the instrument is mismatched.
-    pub fn update(&mut self, line: &Tick, step_iter: &mut i32, file_l3: &mut BufWriter<File>, file_l2_ask: &mut BufWriter<File>, file_l2_bid: &mut BufWriter<File>, timestamp: &HashSet<NaiveTime>)
+    pub fn update(&mut self, line: &Tick, step_iter: &mut i32, file_l3: &mut BufWriter<File>, file_l2_ask: &mut BufWriter<File>, file_l2_bid: &mut BufWriter<File>)
     {
         // переписать всю функцию на итератор
         if self.instrument == line.SECCODE
@@ -288,10 +288,8 @@ impl OrderBook
                 self.low_ask.push(result_ask);
             }
 
-            if timestamp.contains(&self.date) {
                 self.l3_print_to_file(file_l3);
                 self.l2_print_to_file(file_l2_bid, file_l2_ask);
-            }
         }
         else
         {
@@ -306,7 +304,7 @@ impl OrderBook
     /// Returns new order book created from file.
     /// # Panics
     /// This function will panic if file could not be opened (e.g. it does not exist) or contains malformed quotes.
-    pub fn from_file(filename: &str, instrument: String, price_step: f64, timestamp: HashSet<NaiveTime>) -> OrderBook
+    pub fn from_file(filename: &str, instrument: String, price_step: f64,) -> OrderBook
     {
         let mut orderbook = OrderBook::new(instrument.clone(), price_step);
 
@@ -327,7 +325,7 @@ impl OrderBook
                 Ok(file) => file,
             };
             orderbook.update(&record, &mut step_iter, 
-                            &mut l3_order_book_file, &mut l2_order_book_ask_file, &mut l2_order_book_bid_file, &timestamp);
+                            &mut l3_order_book_file, &mut l2_order_book_ask_file, &mut l2_order_book_bid_file);
 
 
         }

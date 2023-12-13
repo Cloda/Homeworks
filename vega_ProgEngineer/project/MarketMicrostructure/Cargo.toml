@@ -1,15 +1,15 @@
 [package]
-name = "market_microstructure_models"
+name = "market_making"
 version = "0.1.0"
 edition = "2021"
-authors = ["Artemy Sazonov", "Ivan Cherepakhin"]
+authors = ["Ivan Cherepakhin"]
 repository = "https://github.com/ArtemySazonov/MarketMicrostructure"
 homepage = "https://github.com/ArtemySazonov/MarketMicrostructure"
 readme = "README.md"
 
 
 [lib]
-name = "market_microstructure_models"
+name = "market_making"
 crate-type = ["cdylib"]
 
 [dependencies]
