@@ -4,6 +4,7 @@
 target/
 
 md_vega_mm_2023_spring/
+test_venv/
 
 data/
 
