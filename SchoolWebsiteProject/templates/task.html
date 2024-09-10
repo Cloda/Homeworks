@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block title %}{{ sub }}{% endblock %}
+
+
+{% block page %}
+		<div class="task">	
+			<span class="task-button"><a href="{% url 'subjects'%}"><span>&larr;</span></a>
+			</span>
+		</div>
+		<section class="section">
+			<div class="section-task">
+				<h1 class="section-task__title">{{ sub }}</h1>
+				<div class="section-task__form">
+					<form action="{% url 'result' %}" class="section-task__form-num" name="{{ variant.id }}" method="POST">
+						{% csrf_token %}
+						<input name="subject" type="hidden" value="{{ num }}">
+						<input name="variant" type="hidden" value="{{ var }}">
+						{% for item in variant.items%}
+						<fieldset class="section-task__form-fieldset">
+							<h5 class="section-task__form-title">Задание {{ item.0 }}</h5>
+							<p class="section-task__form-content">{{ item.1 }}</p>
+							<label class="section-task__form-ans">
+								<span class="section-task__form-label">
+									<strong>Ваш ответ:</strong>
+								</span>
+								<input type="text" name="{{ item.0 }}" class="section-task__form-ans">
+							</label>
+						</fieldset>
+						{% endfor %}
+						<p class="section-task__form-p">
+							<input class="section-task__form-check" type="submit" value="Результат">
+						</p>
+					</form>
+				</div>
+			</div>
+		</section>
+
+{% endblock %}

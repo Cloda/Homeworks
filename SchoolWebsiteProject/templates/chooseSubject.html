@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Создать вариант{% endblock %}
+{% block page %}
+		<section class="section">
+			{% if temp %}<p class="text">Ваш вариант был добавлен. Для перехода к решению прейдите по ссылке:<a href="{% url 'task' subject=linkOne variant=linkTwo %}" target="_blank">{{ linkTwo }}</a></p>{% endif %}
+			<h1 class="section-subjects__title">Выберите предмет</h1>
+            <div class="section-subjects__lesson">
+				<ul class="section-subjects__list">
+					<li class="section-subjects__list-item">
+						<a href="{% url 'create' sub=1 %}" class="section-subjects__list-title">
+							{{ lev.0 }}
+						</a> 
+					</li>
+					<li class="section-subjects__list-item">
+						<a href="{% url 'create' sub=2 %}" class="section-subjects__list-title">
+							{{ lev.1 }}
+						</a> 
+					</li>
+					<li class="section-subjects__list-item">
+						<a href="{% url 'create' sub=3 %}" class="section-subjects__list-title">
+							{{ lev.2 }}
+						</a> 
+					</li>
+				</ul>
+			</div>
+		</section>
+{% endblock %}

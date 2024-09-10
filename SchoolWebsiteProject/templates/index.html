@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}Предметы{% endblock %}
+{% block page %}
+		<section class="section">
+			<h1 class="section-index__title">О нас</h1>
+			<p class="section-index__content">
+			<q>
+				Ни искусство, ни мудрость не могут быть достигнуты,  если им не учиться.
+				<span>ДЕМОКРИТ</span>
+			</q>
+			</p>
+			<div class="section-index__block">
+				<a class="section-index__button" href="{% url 'chooseSub' %}">Сделать вариант</a>
+				<a href="{% url 'subjects' %}" class="section-index__button second">Решать задания</a>	
+			</div>
+		</section>
+{% endblock %}

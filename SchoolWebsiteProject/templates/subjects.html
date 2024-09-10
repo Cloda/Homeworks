@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}Предметы{% endblock %}
+
+{% block page %}
+		<div class="back"><a class="back-button" href="{% url 'index' %}"><span>&larr;</span></a></div>
+		<section class="section">
+			<h1 class="section-subjects__title">Выберите предмет</h1>
+			<div class="section-subjects__lesson">
+				<ul class="section-subjects__list">
+					<li class="section-subjects__list-item">
+						<p class="section-subjects__list-title">
+							{{ lev.0 }}
+						</p> 
+						<ul class="section-subjects__list-level">
+							{% for levs in math %}
+							<li class="section-subjects__list-num">
+								<a  class="section-subjects__list-link" href="{% url 'task' subject=1 variant=levs.id %}">
+									{{ levs }}
+								</a>
+							</li>
+							{% endfor %}
+						</ul>
+					</li>
+					<li class="section-subjects__list-item">
+						<p class="section-subjects__list-title">
+							{{ lev.1 }}
+						</p> 
+						<ul class="section-subjects__list-level">
+							{% for levs in rus %}
+							<li class="section-subjects__list-num">
+								<a  class="section-subjects__list-link" href="{% url 'task' subject=2 variant=levs.id %}">
+									{{ levs }}
+								</a>
+							</li>
+							{% endfor %}
+						</ul>
+					</li>
+					<li class="section-subjects__list-item">
+						<p class="section-subjects__list-title">
+							{{ lev.2 }}
+						</p> 
+						<ul class="section-subjects__list-level">
+							{% for levs in social %}
+							<li class="section-subjects__list-num">
+								<a  class="section-subjects__list-link" href="{% url 'task' subject=3 variant=levs.id %}">
+									{{ levs }}
+								</a>
+							</li>
+							{% endfor %}
+						</ul>
+					</li>
+				</ul>
+			</div>
+		</section>
+{% endblock %}
+
+

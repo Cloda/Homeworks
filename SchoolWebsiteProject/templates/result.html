@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}Результат{% endblock %}
+
+{% block page %}
+
+<section class="result">
+	<h1 class="result-title">Ваш результат: {{ res }}</h1>
+	<div class="result-block">	
+		<div class="result-block__right">
+			<span class="result-block__head">
+				Ваш ответ: 
+			</span>
+			<div>
+			{% for item in user %}
+				<span>{{ item }}</span>
+			{% endfor %}
+			</div>
+			
+		</div>
+		<div class="result-block__right">
+			<span class="result-block__head">
+				Правильный ответ:
+			</span>
+			<div>
+			{% for item in answ %}
+				<span>{{ item }}</span>
+			{% endfor %}
+			</div>
+		</div>
+	</div>
+	<a class="result-link" href="{% url 'subjects' %}">Вернуться к выбору вариантов</a>
+	<form method="POST" action="{% url 'send' %}">
+		{% csrf_token %}
+		<div class="send">
+			<p class="send-title">Отправить учителю</p>
+			<input type="hidden" name="result" value="{{ res }}">
+			<input type="email" name="email" class="section-task__form-ans" placeholder="E-mail учителя" required>
+			<input type="text" name="name" class="section-task__form-ans" placeholder="Ваше имя" required>
+			<input type="text" name="female" class="section-task__form-ans" placeholder="Ваша фамилия" required>
+			<input class="send-submit" type="submit" value="Отправить">
+		</div>
+
+	</form>
+	
+</section>
+{% endblock %}

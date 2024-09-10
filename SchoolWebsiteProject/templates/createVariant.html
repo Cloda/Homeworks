@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}Создать вариант{% endblock %}
+{% block page %}
+		<section class="create">
+			<h1 class="create-title">{{ title }}</h1>
+			<form class="create-variant" method="POST">
+				{% csrf_token %}
+				{% for field in form %}
+        			<label class="create-variant__label" for="{{ field.name }}">{{ field.label }}</label>
+        			{{ field }}
+    			{% endfor %}
+				<button class="create-submit section-task__form-check" type="submit">Сохранить</button>
+			</form>
+		</section>
+{% endblock %}
