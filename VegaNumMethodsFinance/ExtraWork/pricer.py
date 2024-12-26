@@ -95,7 +95,11 @@ def price(maturity: float,
                            x_min=x_min,
                            x_max=x_max,
                            t_start=0,
-                           t_end=maturity)  
+                           t_end=maturity,
+                           K=strike,
+                           spot=spot,
+                           r=interest_rate
+                           )  
               
     # If HeatEquatinon, we need to discount the T-forward prices to a value date. 
     solution["FunctionValues"] *= np.exp(-interest_rate * maturity)

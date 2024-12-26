@@ -9,6 +9,7 @@ from copy import deepcopy
 class FiniteDifferencingScheme(Enum):
     Explicit = 0
     Implicit = 1
+    AmericanPut = 2
 
     def __eq__(self, other):
         return self.__class__ is other.__class__ and other.value == self.value
@@ -16,7 +17,7 @@ class FiniteDifferencingScheme(Enum):
 
 def solve_1d_pde(scheme: FiniteDifferencingScheme, lower_boundary_condition: Callable[[float, float], float], upper_boundary_condition: Callable[[float, float], float],
                terminal_condition: Callable[[np.ndarray], float], pde_coefficients: Callable[[float], dict], number_of_spatial_levels: int, number_of_time_steps: int,
-               x_min: float, x_max: float, t_start: float, t_end: float) -> tuple[Dict[str, np.ndarray], np.ndarray]:
+               x_min: float, x_max: float, t_start: float, t_end: float, K: float, spot: float, r: float) -> tuple[Dict[str, np.ndarray], np.ndarray]:
     """PDE solver.
 
     Args:
@@ -138,5 +139,52 @@ def solve_1d_pde(scheme: FiniteDifferencingScheme, lower_boundary_condition: Cal
                 result_slice[1:-1] = inv_propagator.solve(workspace_slice[1:-1])
                 # Now workspsace slice points to a new slice u^{m+1}.
                 workspace_slice = result_slice
+        case FiniteDifferencingScheme.AmericanPut:
+            # Initialize the propagator tridiagonal matrix.
+            main_diagonal = 1 - pde_coefficients_at_grid_values["U"] * dt + 2 * dt / (
+                dx ** 2) * pde_coefficients_at_grid_values["U_xx"]
+            lower_diagonal = - pde_coefficients_at_grid_values["U_xx"] * dt / (
+                dx ** 2) + pde_coefficients_at_grid_values["U_x"] * dt / (2 * dx)
+            upper_diagonal = - pde_coefficients_at_grid_values["U_xx"] * dt / (
+                dx ** 2) - pde_coefficients_at_grid_values["U_x"] * dt / (2 * dx)
+
+            # Cast the main diagonal element to an array if needed.
+            if isinstance(main_diagonal, float):
+                main_diagonal = np.full(
+                    number_of_spatial_levels, main_diagonal)
+
+            # Cast the upper diagonal element to an array if needed.
+            if isinstance(upper_diagonal, float):
+                upper_diagonal = np.full(
+                    number_of_spatial_levels, upper_diagonal)
+
+            # Cast the lower diagonal element to an array if needed.
+            if isinstance(lower_diagonal, float):
+                lower_diagonal = np.full(
+                    number_of_spatial_levels, lower_diagonal)
+
+            # Initialize the propagator matrix A (that is, such matrix that u^{m} = A * u^{m+1}) in CSR (compressed sparse row) format.
+            propagator = sparse.diags(
+                [lower_diagonal[2:-1], main_diagonal[1:-1], upper_diagonal[1:-2]], (-1, 0, 1)).tocsc()
+            # Compute LU decomposition of propagator A.
+            inv_propagator = splu(propagator)
+            # Main propagation loop, evlauating u^{m} = A * u^{m+1}.
+            for i, t in enumerate(reversed(time_grid[:-1])):
+                # YOUR CODE HERE
+                # Handling lower boundary conditon.
+                result_slice[0] = lower_boundary_condition(spatial_grid[0], t)
+                # Handling upper boundary conditon.
+                result_slice[-1] = upper_boundary_condition(
+                    spatial_grid[-1], t)
+                # Adjusting the second element u^{m}_{1} in work space slice to satisfy boyndary conditions.
+                workspace_slice[1] -= lower_diagonal[1] * result_slice[0]
+                # Adjusting the penultimate element u^{m}_{N-2} in work space slice to satisfy boyndary conditions.
+                workspace_slice[-2] -= upper_diagonal[-2] * result_slice[-1]
+                # Solve u^{m} = A * u^{m+1} and retrieve u^{m+1}.
+                result_slice[1:-1] = inv_propagator.solve(workspace_slice[1:-1])
+                # Now workspsace slice points to a new slice u^{m+1}.
+                sigma2_half = pde_coefficients(0)["U_xx"]
+                S = spot * np.exp(spatial_grid - (r - sigma2_half) * (t_end - t))
+                workspace_slice = np.maximum(result_slice, (K - S) * np.exp(r * (t_end - t)))
                 
     return {"SpatialGrid": spatial_grid, "FunctionValues": result_slice}
