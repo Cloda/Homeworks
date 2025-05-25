@@ -14,7 +14,6 @@ venv
 
 ds_problem.pdf
 
-*.csv
 *.aux
 *.bbl
 *.bcf
